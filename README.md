@@ -7,14 +7,25 @@ This Docker container will send free disk space metric to AWS CloudWatch.
 How to run it ?
 ----------------
 
-Simple add crontab entry and script will figure out rest details
+Simple add crontab entry and script will figure out rest of details.
 
     sudo crontab -e ->
-    */2 * * * * docker run -v /:/host_root:ro --rm --log-driver=syslog docker pull ogavrisevs/ec2-disk2cw:latest --verbose
+    */2 * * * * docker run -v /:/host_root:ro --rm --log-driver=syslog ogavrisevs/ec2-diskfreespace-to-cloudwatch:latest --verbose
 
-You need to share host disk (read only) with container
+You need to share host disk (read only) with container.
 
     -v /:/host_root:ro
+
+Any additional permissions ?
+-----------------------------
+
+Yes you need to grant additional policies to push AWS CloudWatch metrics
+If you are running docker on AWS ECS add following policies to your instance profile role:
+
+    cloudwatch:PutMetricData
+    cloudwatch:GetMetricStatistics
+    cloudwatch:ListMetrics
+    ec2:DescribeTags  
 
 What is footprint ?
 ---------------------
